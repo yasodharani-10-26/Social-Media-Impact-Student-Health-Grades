@@ -1,1 +1,1 @@
-# AI-Social-Media-Impact-Student-Health-Grades
+Social-Media-Impact-Student-Health-Grades
