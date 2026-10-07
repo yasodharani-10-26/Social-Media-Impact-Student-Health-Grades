@@ -1,13 +1,15 @@
 import streamlit as st
 import kagglehub
-import os
+from kagglehub import KaggleDatasetAdapter
 
+# Page configuration
 st.set_page_config(
     page_title="AI & Social Media Impact",
     page_icon="📊",
     layout="wide"
 )
 
+# Title
 st.title("📊 AI & Social Media Impact")
 st.subheader("Student Health & Academic Performance")
 
@@ -16,23 +18,35 @@ st.write(
     "social media usage, student health, and academic performance."
 )
 
+# Kaggle dataset file
+file_path = "AI_SocialMedia_Student_Dataset.csv"
+
 try:
-    # Download the Kaggle dataset
-    dataset_path = kagglehub.dataset_download(
-        "srisyra02/ai-and-social-media-impact-student-health-and-grades"
+    # Load dataset
+    df = kagglehub.load_dataset(
+        KaggleDatasetAdapter.PANDAS,
+        "srisyra02/ai-and-social-media-impact-student-health-and-grades",
+        file_path,
     )
 
-    st.success("Dataset downloaded successfully!")
+    st.success("✅ Dataset loaded successfully!")
 
-    st.write("### Dataset location")
-    st.write(dataset_path)
+    # Dataset overview
+    st.write("## 📋 Dataset Preview")
+    st.dataframe(df.head(10), use_container_width=True)
 
-    st.write("### Files available in the dataset")
+    # Dataset information
+    col1, col2 = st.columns(2)
 
-    files = os.listdir(dataset_path)
+    with col1:
+        st.metric("Number of Students", df.shape[0])
 
-    for file in files:
-        st.write("📄", file)
+    with col2:
+        st.metric("Number of Features", df.shape[1])
+
+    # Columns
+    st.write("## 🔎 Dataset Columns")
+    st.write(list(df.columns))
 
 except Exception as e:
     st.error(f"Unable to load dataset: {e}")
